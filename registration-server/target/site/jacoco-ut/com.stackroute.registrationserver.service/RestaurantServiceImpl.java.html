@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestaurantServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">registration-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.registrationserver.service</a> &gt; <span class="el_source">RestaurantServiceImpl.java</span></div><h1>RestaurantServiceImpl.java</h1><pre class="source lang-java linenums">package com.stackroute.registrationserver.service;
+
+import com.stackroute.registrationserver.domain.Restaurants;
+import com.stackroute.registrationserver.domain.RestaurantProfile;
+import com.stackroute.registrationserver.repository.RestaurantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class RestaurantServiceImpl implements RestaurantService {
+
+
+    RestaurantRepository restaurantRepository;
+
+    @Autowired
+<span class="fc" id="L18">    public RestaurantServiceImpl(RestaurantRepository restaurantRepository){</span>
+
+<span class="fc" id="L20">        this.restaurantRepository = restaurantRepository;</span>
+
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    public RestaurantProfile saveRestaurant(Restaurants restaurant) throws Exception {
+
+<span class="nc" id="L27">        RestaurantProfile restaurantProfile = new RestaurantProfile(restaurant.getUsername(),restaurant.getEmail(),restaurant.getRole(),restaurant.getRestaurantName(),restaurant.getMobile(),restaurant.getAddress(),restaurant.getLocation(),restaurant.getCertificateNo(),restaurant.getCertificateName());</span>
+
+<span class="nc" id="L29">        RestaurantProfile savedRestaurantDetails = restaurantRepository.save(restaurantProfile);</span>
+<span class="nc" id="L30">        return savedRestaurantDetails;</span>
+    }
+
+    @Override
+    public List&lt;RestaurantProfile&gt; displayRestaurants() throws Exception {
+<span class="nc" id="L35">        return restaurantRepository.findAll();</span>
+    }
+
+    @Override
+    public RestaurantProfile displayRestaurantByUsername(String username) throws Exception {
+//        List&lt;RestaurantProfile&gt; restaurant = null;
+<span class="nc" id="L41">        RestaurantProfile restaurant = restaurantRepository.displayRestaurantByUsername(username);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (restaurant == null) {</span>
+<span class="nc" id="L43">            throw new Exception(&quot;Username Not Found&quot;);</span>
+        }
+<span class="nc" id="L45">        return restaurant;</span>
+    }
+
+    @Override
+    public RestaurantProfile updateRestaurant(Restaurants restaurant) throws Exception {
+<span class="nc" id="L50">        RestaurantProfile restaurantProfile = new RestaurantProfile(restaurant.getUsername(),restaurant.getEmail(),restaurant.getRole(),restaurant.getRestaurantName(),restaurant.getMobile(),restaurant.getAddress(),restaurant.getLocation(),restaurant.getCertificateNo(),restaurant.getCertificateName());</span>
+
+<span class="nc" id="L52">        return restaurantRepository.save(restaurantProfile);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

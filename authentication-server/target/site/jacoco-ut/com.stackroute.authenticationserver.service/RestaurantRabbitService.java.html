@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestaurantRabbitService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">authentication-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.authenticationserver.service</a> &gt; <span class="el_source">RestaurantRabbitService.java</span></div><h1>RestaurantRabbitService.java</h1><pre class="source lang-java linenums">package com.stackroute.authenticationserver.service;
+
+import com.stackroute.authenticationserver.model.User;
+import com.stackroute.rabbitmq.model.CharityMQ;
+import com.stackroute.rabbitmq.model.DeliveryBoyMQ;
+import com.stackroute.rabbitmq.model.RestaurantMQ;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+@RabbitListener(queues = &quot;${restaurant.queue}&quot;)
+@RabbitListener(queues = &quot;${charity.queue}&quot;)
+@RabbitListener(queues = &quot;${deliveryBoy.queue}&quot;)
+<span class="fc" id="L16">public class RestaurantRabbitService {</span>
+
+
+    @Autowired
+    private JwtUserDetailsService userDetailsService;
+
+    @RabbitHandler
+    public void recievedRestaurantMessage(RestaurantMQ restaurant) throws Exception{
+<span class="nc" id="L24">        System.out.println(&quot;Recieved RestaurantMQ Message From RabbitMQ: &quot; + restaurant);</span>
+<span class="nc" id="L25">        User user = new User(restaurant.getUsername(),restaurant.getPassword(), restaurant.getRole());</span>
+<span class="nc" id="L26">        userDetailsService.save(user);</span>
+
+<span class="nc" id="L28">    }</span>
+
+    @RabbitHandler
+    public void recievedCharityMessage(CharityMQ charity) throws Exception{
+<span class="nc" id="L32">        System.out.println(&quot;Recieved Message From RabbitMQ: &quot; + charity);</span>
+<span class="nc" id="L33">        User user = new User(charity.getUsername(),charity.getPassword(), charity.getRole());</span>
+<span class="nc" id="L34">        userDetailsService.save(user);</span>
+
+<span class="nc" id="L36">    }</span>
+
+    @RabbitHandler
+    public void recieveddeliveryBoyMessage(DeliveryBoyMQ deliveryBoy) throws Exception{
+<span class="nc" id="L40">        System.out.println(&quot;Recieved Message From RabbitMQ: &quot; + deliveryBoy);</span>
+<span class="nc" id="L41">        User user = new User(deliveryBoy.getUsername(),deliveryBoy.getPassword(), deliveryBoy.getRole());</span>
+<span class="nc" id="L42">        userDetailsService.save(user);</span>
+
+<span class="nc" id="L44">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

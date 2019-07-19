@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RabbitService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">charity-logs-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.service</a> &gt; <span class="el_source">RabbitService.java</span></div><h1>RabbitService.java</h1><pre class="source lang-java linenums">package com.stackroute.service;
+
+import com.stackroute.domain.Charity;
+import com.stackroute.domain.CharityLiveStatus;
+import com.stackroute.domain.Logs;
+import com.stackroute.rabbitmq.model.CharityStatus;
+import com.stackroute.rabbitmq.model.CharityStatusList;
+import com.stackroute.repository.CharityRepository;
+import com.stackroute.repository.CharityLiveStatusRepository;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RabbitListener(queues = &quot;${charityLogs.rabbitmq.queue}&quot;)
+<span class="fc" id="L22">public class RabbitService {</span>
+
+    @Autowired
+    private CharityRepository charityRepository;
+
+    @Autowired
+    private CharityLiveStatusRepository charityLiveStatusRepository;
+
+    @RabbitHandler
+    public void receivedmsg(CharityStatusList charityStatusListWrapper) {
+<span class="nc" id="L32">        List&lt;CharityStatus&gt; charityStatusList = charityStatusListWrapper.getCharityStatusList();</span>
+<span class="nc" id="L33">        System.out.println(&quot;Recieved List :&quot; + charityStatusList);</span>
+//        List&lt;Charity&gt; charityList = charityRepository.findAll();
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        for (int i = 0; i &lt; charityStatusList.size(); i++) {</span>
+<span class="nc" id="L36">            CharityStatus charityStatus = charityStatusList.get(i);</span>
+<span class="nc" id="L37">            System.out.println(&quot;Recieved Message For Charity : &quot; + charityStatus.getUsername() + &quot; =&gt; &quot; + charityStatus);</span>
+//            System.out.println(charityRepository.findById(charityStatus.getUsername()).get());
+<span class="nc" id="L39">            Charity charity = new Charity();</span>
+<span class="nc" id="L40">            System.out.println(charity);</span>
+            try{
+<span class="nc" id="L42">                charity = charityRepository.findById(charityStatus.getUsername()).get();</span>
+            }
+<span class="nc" id="L44">            catch (Exception e){</span>
+<span class="nc" id="L45">                System.out.println(e.getMessage());</span>
+<span class="nc" id="L46">            }</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if(charity.getUsername()!=null){</span>
+<span class="nc" id="L48">                List&lt;Logs&gt; logsList = charity.getLogs();</span>
+<span class="nc" id="L49">                Logs logs = new Logs();</span>
+<span class="nc" id="L50">                DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyy/MM/dd HH:mm:ss&quot;);</span>
+<span class="nc" id="L51">                LocalDateTime now = LocalDateTime.now();</span>
+<span class="nc" id="L52">                charity.setUsername(charityStatus.getUsername());</span>
+<span class="nc" id="L53">                logs.setId(&quot;1&quot;);</span>
+<span class="nc" id="L54">                logs.setDate(dtf.format(now));</span>
+<span class="nc" id="L55">                logs.setCharityStatus(charityStatus);</span>
+<span class="nc" id="L56">                logsList.add(logs);</span>
+<span class="nc" id="L57">                charity.setLogs(logsList);</span>
+<span class="nc" id="L58">                charityRepository.save(charity);</span>
+<span class="nc" id="L59">                CharityLiveStatus charityLiveStatus = new CharityLiveStatus(charityStatus.getUsername(),logs);</span>
+<span class="nc" id="L60">                charityLiveStatusRepository.save(charityLiveStatus);</span>
+<span class="nc" id="L61">            }</span>
+            else {
+<span class="nc" id="L63">                charity = new Charity();</span>
+<span class="nc" id="L64">                List&lt;Logs&gt; logsList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L65">                Logs logs = new Logs();</span>
+<span class="nc" id="L66">                DateTimeFormatter dtf = DateTimeFormatter.ofPattern(&quot;yyyy/MM/dd HH:mm:ss&quot;);</span>
+<span class="nc" id="L67">                LocalDateTime now = LocalDateTime.now();</span>
+<span class="nc" id="L68">                charity.setUsername(charityStatus.getUsername());</span>
+<span class="nc" id="L69">                logs.setId(&quot;1&quot;);</span>
+<span class="nc" id="L70">                logs.setDate(dtf.format(now));</span>
+<span class="nc" id="L71">                logs.setCharityStatus(charityStatus);</span>
+<span class="nc" id="L72">                logsList.add(logs);</span>
+<span class="nc" id="L73">                charity.setLogs(logsList);</span>
+<span class="nc" id="L74">                charityRepository.save(charity);</span>
+<span class="nc" id="L75">                CharityLiveStatus charityLiveStatus = new CharityLiveStatus(charityStatus.getUsername(),logs);</span>
+<span class="nc" id="L76">                charityLiveStatusRepository.save(charityLiveStatus);</span>
+            }
+        }
+<span class="nc" id="L79">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

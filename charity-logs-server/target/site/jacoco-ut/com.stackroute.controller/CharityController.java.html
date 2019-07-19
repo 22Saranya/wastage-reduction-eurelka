@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharityController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">charity-logs-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.controller</a> &gt; <span class="el_source">CharityController.java</span></div><h1>CharityController.java</h1><pre class="source lang-java linenums">package com.stackroute.controller;
+
+import com.stackroute.domain.Charity;
+import com.stackroute.service.CharityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(value=&quot;api/v1&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class CharityController {
+    @Autowired
+    CharityService charityService;
+
+    @Autowired
+    public  CharityController(CharityService charityService)
+<span class="fc" id="L19">    {</span>
+<span class="fc" id="L20">        this.charityService = charityService;</span>
+<span class="fc" id="L21">    }</span>
+    ResponseEntity responseEntity;
+
+    @PostMapping(&quot;charity-logs&quot;)
+    public ResponseEntity&lt;?&gt; saveCharityLogs (@RequestBody Charity charity) throws Exception
+    {
+
+<span class="nc" id="L28">        charityService.saveCharityLogs(charity);</span>
+<span class="nc" id="L29">        responseEntity=new ResponseEntity(charity, HttpStatus.CREATED);</span>
+<span class="nc" id="L30">        return  responseEntity;</span>
+    }
+
+    @GetMapping(&quot;charity-logs&quot;)
+    public ResponseEntity displayCharityLogs(@RequestParam String username)
+    {
+<span class="nc" id="L36">        return  new ResponseEntity(charityService.fetchCharity(username),HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;charity-status&quot;)
+    public ResponseEntity displayCharityStatus(@RequestParam String username)
+    {
+<span class="nc" id="L42">        return  new ResponseEntity(charityService.fetchCharityStatus(username),HttpStatus.OK);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

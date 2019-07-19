@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RabbitService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">registration-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.registrationserver.service</a> &gt; <span class="el_source">RabbitService.java</span></div><h1>RabbitService.java</h1><pre class="source lang-java linenums">package com.stackroute.registrationserver.service;
+
+import com.stackroute.rabbitmq.model.CharityMQ;
+import com.stackroute.rabbitmq.model.DeliveryBoyMQ;
+import com.stackroute.rabbitmq.model.RestaurantMQ;
+import com.stackroute.registrationserver.domain.Charities;
+import com.stackroute.registrationserver.domain.DeliveryBoys;
+import com.stackroute.registrationserver.domain.Restaurants;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+<span class="fc" id="L16">public class RabbitService {</span>
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Value(&quot;${restaurant.exchange}&quot;)
+    private String restaurantExchange;
+
+    @Value(&quot;${restaurant.routingkey}&quot;)
+    private String restaurantRoutingkey;
+
+    @Value(&quot;${restaurant.update.routingkey}&quot;)
+    private String restaurantUpdateRoutingkey;
+
+    @Value(&quot;${charity.exchange}&quot;)
+    private String charityExchange;
+
+    @Value(&quot;${charity.routingkey}&quot;)
+    private String charityRoutingkey;
+
+    @Value(&quot;${charity.update.routingkey}&quot;)
+    private String charityUpdateRoutingkey;
+
+    @Value(&quot;${deliveryBoy.exchange}&quot;)
+    private String deliveryBoyExchange;
+
+    @Value(&quot;${deliveryBoy.routingkey}&quot;)
+    private String deliveryBoyRoutingkey;
+
+    @Value(&quot;${deliveryBoy.update.routingkey}&quot;)
+    private String deliveryBoyUpdateRoutingkey;
+
+    public void sendToRestaurantRabbitMq(Restaurants restaurants) {
+
+<span class="nc" id="L50">        RestaurantMQ restaurant = new RestaurantMQ(restaurants.getUsername(),restaurants.getPassword(),restaurants.getEmail(),restaurants.getRole(),restaurants.getRestaurantName(),restaurants.getMobile(),restaurants.getAddress(),restaurants.getLocation(),restaurants.getCertificateNo(),restaurants.getCertificateName());</span>
+
+<span class="nc" id="L52">        rabbitTemplate.convertAndSend(restaurantExchange, restaurantRoutingkey,restaurant);</span>
+
+<span class="nc" id="L54">        System.out.println(&quot;Send msg = &quot; + restaurant);</span>
+
+<span class="nc" id="L56">    }</span>
+
+    public void sendToCharityRabbitMq(Charities charities) {
+
+<span class="nc" id="L60">        CharityMQ charity = new CharityMQ(charities.getUsername(),charities.getPassword(),charities.getEmail(), charities.getRole(),charities.getCharityName(),charities.getMobile(),charities.getAddress(),charities.getLocation(),charities.getFoodRequirement(),charities.getCertificateNo(),charities.getCertificateName());</span>
+
+<span class="nc" id="L62">        rabbitTemplate.convertAndSend(charityExchange, charityRoutingkey,charity);</span>
+
+<span class="nc" id="L64">        System.out.println(&quot;Send msg = &quot; + charity);</span>
+
+<span class="nc" id="L66">    }</span>
+
+    public void sendToDeliveryBoyMQ(DeliveryBoys deliveryBoys) {
+
+<span class="nc" id="L70">        DeliveryBoyMQ deliveryBoyMQ = new DeliveryBoyMQ(deliveryBoys.getUsername(), deliveryBoys.getPassword(),deliveryBoys.getEmail(),deliveryBoys.getRole(),deliveryBoys.getDeliveryBoyName(),deliveryBoys.getMobile(),deliveryBoys.getAddress(),deliveryBoys.getLicenseNo(),deliveryBoys.getLicenseName());</span>
+<span class="nc" id="L71">        rabbitTemplate.convertAndSend(deliveryBoyExchange, deliveryBoyRoutingkey, deliveryBoyMQ);</span>
+
+<span class="nc" id="L73">        System.out.println(&quot;Sent CharityMQ = &quot; + deliveryBoyMQ);</span>
+
+<span class="nc" id="L75">    }</span>
+
+    public void sendToRestaurantUpdateRabbitMq(Restaurants restaurants) {
+
+<span class="nc" id="L79">        RestaurantMQ restaurant = new RestaurantMQ(restaurants.getUsername(),restaurants.getPassword(),restaurants.getEmail(),restaurants.getRole(),restaurants.getRestaurantName(),restaurants.getMobile(),restaurants.getAddress(),restaurants.getLocation(),restaurants.getCertificateNo(),restaurants.getCertificateName());</span>
+
+<span class="nc" id="L81">        rabbitTemplate.convertAndSend(restaurantExchange, restaurantUpdateRoutingkey,restaurant);</span>
+
+<span class="nc" id="L83">        System.out.println(&quot;Send msg = &quot; + restaurant);</span>
+
+<span class="nc" id="L85">    }</span>
+
+    public void sendToCharityUpdateRabbitMq(Charities charities) {
+
+<span class="nc" id="L89">        CharityMQ charity = new CharityMQ(charities.getUsername(),charities.getPassword(),charities.getEmail(), charities.getRole(),charities.getCharityName(),charities.getMobile(),charities.getAddress(),charities.getLocation(),charities.getFoodRequirement(),charities.getCertificateNo(),charities.getCertificateName());</span>
+
+<span class="nc" id="L91">        rabbitTemplate.convertAndSend(charityExchange, charityUpdateRoutingkey,charity);</span>
+
+<span class="nc" id="L93">        System.out.println(&quot;Send msg = &quot; + charity);</span>
+
+<span class="nc" id="L95">    }</span>
+
+    public void sendToDeliveryBoyUpdateMQ(DeliveryBoys deliveryBoys) {
+
+<span class="nc" id="L99">        DeliveryBoyMQ deliveryBoyMQ = new DeliveryBoyMQ(deliveryBoys.getUsername(), deliveryBoys.getPassword(),deliveryBoys.getEmail(),deliveryBoys.getRole(),deliveryBoys.getDeliveryBoyName(),deliveryBoys.getMobile(),deliveryBoys.getAddress(),deliveryBoys.getLicenseNo(),deliveryBoys.getLicenseName());</span>
+<span class="nc" id="L100">        rabbitTemplate.convertAndSend(deliveryBoyExchange, deliveryBoyUpdateRoutingkey, deliveryBoyMQ);</span>
+
+<span class="nc" id="L102">        System.out.println(&quot;Sent CharityMQ = &quot; + deliveryBoyMQ);</span>
+
+<span class="nc" id="L104">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

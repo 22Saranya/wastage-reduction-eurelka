@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RabbitMqConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">registration-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.registrationserver.config</a> &gt; <span class="el_source">RabbitMqConfig.java</span></div><h1>RabbitMqConfig.java</h1><pre class="source lang-java linenums">package com.stackroute.registrationserver.config;
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+<span class="fc" id="L16">public class RabbitMqConfig {</span>
+
+    @Value(&quot;${restaurant.exchange}&quot;)
+    String restaurantExchange;
+
+    @Bean
+    DirectExchange restaurantExchange() {
+<span class="fc" id="L23">        System.out.println(&quot;inside exchange&quot;);</span>
+<span class="fc" id="L24">        return new DirectExchange(restaurantExchange);</span>
+    }
+
+    @Value(&quot;${restaurant.queue}&quot;)
+    String restaurantQueueName;
+
+    @Value(&quot;${restaurant.routingkey}&quot;)
+    private String restaurantRoutingkey;
+
+    @Bean
+    Queue restaurantQueue() {
+<span class="fc" id="L35">        System.out.println(&quot;inside queue&quot;);</span>
+<span class="fc" id="L36">        return new Queue(restaurantQueueName, true);</span>
+    }
+
+    @Bean
+    Binding restaurantBinding() {
+<span class="fc" id="L41">        System.out.println(&quot;inside binding&quot;);</span>
+<span class="fc" id="L42">        return BindingBuilder.bind(restaurantQueue()).to(restaurantExchange()).with(restaurantRoutingkey);</span>
+    }
+
+    @Value(&quot;${restaurant.update.queue}&quot;)
+    String restaurantUpdateQueueName;
+
+    @Value(&quot;${restaurant.update.routingkey}&quot;)
+    private String restaurantUpdateRoutingkey;
+
+    @Bean
+    Queue restaurantUpdateQueue() {
+<span class="fc" id="L53">        System.out.println(&quot;inside queue&quot;);</span>
+<span class="fc" id="L54">        return new Queue(restaurantUpdateQueueName, true);</span>
+    }
+
+    @Bean
+    Binding restaurantUpdateBinding() {
+<span class="fc" id="L59">        System.out.println(&quot;inside binding&quot;);</span>
+<span class="fc" id="L60">        return BindingBuilder.bind(restaurantUpdateQueue()).to(restaurantExchange()).with(restaurantUpdateRoutingkey);</span>
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Value(&quot;${charity.exchange}&quot;)
+    String charityExchange;
+
+    @Bean
+    DirectExchange charityExchange() {
+<span class="fc" id="L70">        System.out.println(&quot;inside exchange&quot;);</span>
+<span class="fc" id="L71">        return new DirectExchange(charityExchange);</span>
+    }
+
+    @Value(&quot;${charity.queue}&quot;)
+    String charityQueueName;
+
+    @Value(&quot;${charity.routingkey}&quot;)
+    private String charityRoutingkey;
+
+    @Bean
+    Queue charityQueue() {
+<span class="fc" id="L82">        System.out.println(&quot;inside queue&quot;);</span>
+<span class="fc" id="L83">        return new Queue(charityQueueName, true);</span>
+    }
+
+    @Bean
+    Binding charityBinding() {
+<span class="fc" id="L88">        System.out.println(&quot;inside binding&quot;);</span>
+<span class="fc" id="L89">        return BindingBuilder.bind(charityQueue()).to(charityExchange()).with(charityRoutingkey);</span>
+    }
+
+    @Value(&quot;${charity.update.queue}&quot;)
+    String charityUpdateQueueName;
+
+    @Value(&quot;${charity.update.routingkey}&quot;)
+    private String charityUpdateRoutingkey;
+
+    @Bean
+    Queue charityUpdateQueue() {
+<span class="fc" id="L100">        System.out.println(&quot;inside queue&quot;);</span>
+<span class="fc" id="L101">        return new Queue(charityUpdateQueueName, true);</span>
+    }
+
+    @Bean
+    Binding charityUpdateBinding() {
+<span class="fc" id="L106">        System.out.println(&quot;inside binding&quot;);</span>
+<span class="fc" id="L107">        return BindingBuilder.bind(charityUpdateQueue()).to(charityExchange()).with(charityUpdateRoutingkey);</span>
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @Value(&quot;${deliveryBoy.exchange}&quot;)
+    String deliveryBoyExchange;
+
+    @Bean
+    DirectExchange deliveryBoyExchange() {
+<span class="fc" id="L118">        System.out.println(&quot;inside exchange&quot;);</span>
+<span class="fc" id="L119">        return new DirectExchange(deliveryBoyExchange);</span>
+    }
+
+    @Value(&quot;${deliveryBoy.queue}&quot;)
+    String deliveryBoyQueueName;
+
+    @Value(&quot;${deliveryBoy.routingkey}&quot;)
+    private String deliveryBoyRoutingkey;
+
+    @Bean
+    Queue deliveryBoyQueue() {
+<span class="fc" id="L130">        System.out.println(&quot;inside queue&quot;);</span>
+<span class="fc" id="L131">        return new Queue(deliveryBoyQueueName, true);</span>
+    }
+
+    @Bean
+    Binding deliveryBoyBinding() {
+<span class="fc" id="L136">        System.out.println(&quot;inside binding&quot;);</span>
+<span class="fc" id="L137">        return BindingBuilder.bind(deliveryBoyQueue()).to(deliveryBoyExchange()).with(deliveryBoyRoutingkey);</span>
+    }
+
+    @Value(&quot;${deliveryBoy.update.queue}&quot;)
+    String deliveryBoyUpdateQueueName;
+
+    @Value(&quot;${deliveryBoy.update.routingkey}&quot;)
+    private String deliveryBoyUpdateRoutingkey;
+
+    @Bean
+    Queue deliveryBoyUpdateQueue() {
+<span class="fc" id="L148">        System.out.println(&quot;inside queue&quot;);</span>
+<span class="fc" id="L149">        return new Queue(deliveryBoyUpdateQueueName, true);</span>
+    }
+
+    @Bean
+    Binding deliveryBoyUpdateBinding() {
+<span class="fc" id="L154">        System.out.println(&quot;inside binding&quot;);</span>
+<span class="fc" id="L155">        return BindingBuilder.bind(deliveryBoyUpdateQueue()).to(deliveryBoyExchange()).with(deliveryBoyUpdateRoutingkey);</span>
+    }
+
+
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+<span class="fc" id="L161">        System.out.println(&quot;inside jsonMessageConverter&quot;);</span>
+<span class="fc" id="L162">        return new Jackson2JsonMessageConverter();</span>
+    }
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+<span class="fc" id="L166">        System.out.println(&quot;inside rabbitTemplate&quot;);</span>
+<span class="fc" id="L167">        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);</span>
+<span class="fc" id="L168">        rabbitTemplate.setMessageConverter(jsonMessageConverter());</span>
+<span class="fc" id="L169">        return rabbitTemplate;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

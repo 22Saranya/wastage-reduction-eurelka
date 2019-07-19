@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegistrationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">registration-server</a> &gt; <a href="index.source.html" class="el_package">com.stackroute.registrationserver.controller</a> &gt; <span class="el_source">RegistrationController.java</span></div><h1>RegistrationController.java</h1><pre class="source lang-java linenums">package com.stackroute.registrationserver.controller;
+
+import com.stackroute.rabbitmq.model.RestaurantMQ;
+import com.stackroute.registrationserver.domain.*;
+import com.stackroute.registrationserver.service.CharityService;
+import com.stackroute.registrationserver.service.DeliveryBoyService;
+import com.stackroute.registrationserver.service.RabbitService;
+import com.stackroute.registrationserver.service.RestaurantService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(value = &quot;api/v1&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+<span class="fc" id="L19">public class RegistrationController {</span>
+
+    @Autowired
+    private RestaurantService restaurantService;
+
+    @Autowired
+    private CharityService charityService;
+
+    @Autowired
+    private DeliveryBoyService deliveryBoyService;
+
+    @Autowired
+    private RabbitService rabbitService;
+
+    @PostMapping(&quot;restaurant-profile&quot;)
+    public ResponseEntity&lt;RestaurantProfile&gt; saveRestaurant(@RequestBody Restaurants restaurant) throws Exception {
+        ResponseEntity responseEntity;
+
+        try {
+
+<span class="nc" id="L39">            RestaurantProfile returnRestaurant = restaurantService.saveRestaurant(restaurant);</span>
+<span class="nc" id="L40">            responseEntity = new ResponseEntity&lt;RestaurantProfile&gt;(returnRestaurant, HttpStatus.CREATED);</span>
+
+<span class="nc" id="L42">            rabbitService.sendToRestaurantRabbitMq(restaurant);</span>
+
+<span class="nc" id="L44">        } catch (Exception e) {</span>
+
+<span class="nc" id="L46">            responseEntity = new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);</span>
+
+<span class="nc" id="L48">        }</span>
+
+<span class="nc" id="L50">        return responseEntity;</span>
+    }
+//    @GetMapping(&quot;restaurant-profile&quot;)
+//    public ResponseEntity&lt;List&lt;RestaurantMQ&gt;&gt; displayRestaurant()
+//    {
+//        ResponseEntity responseEntity;
+//
+//        try{
+//
+//            responseEntity=new ResponseEntity(restaurantService.displayRestaurants(),HttpStatus.CREATED);
+//
+//        }
+//        catch (Exception e){
+//
+//            responseEntity=new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);
+//
+//        }
+//        return responseEntity;
+//    }
+
+    @GetMapping(&quot;restaurant-profile&quot;)
+    public ResponseEntity&lt;RestaurantProfile&gt; displayRestaurantByUsername(@RequestParam String username) throws Exception
+    {
+        ResponseEntity responseEntity;
+
+        try {
+<span class="nc" id="L76">            RestaurantProfile restaurant = restaurantService.displayRestaurantByUsername(username);</span>
+<span class="nc" id="L77">            return new ResponseEntity&lt;RestaurantProfile&gt;(restaurant, HttpStatus.OK);</span>
+<span class="nc" id="L78">        } catch (Exception ex) {</span>
+<span class="nc" id="L79">            responseEntity = new ResponseEntity&lt;String&gt;(ex.getMessage(), HttpStatus.CONFLICT);</span>
+<span class="nc" id="L80">            ex.getMessage();</span>
+        }
+<span class="nc" id="L82">        return responseEntity;</span>
+    }
+
+    @PutMapping(&quot;restaurant-profile&quot;)
+    public ResponseEntity updateRestaurant(@RequestBody Restaurants restaurant)
+
+    {
+
+        ResponseEntity responseEntity;
+        try
+        {
+<span class="nc" id="L93">            responseEntity = new ResponseEntity(restaurantService.updateRestaurant(restaurant),HttpStatus.CREATED);</span>
+<span class="nc" id="L94">            rabbitService.sendToRestaurantUpdateRabbitMq(restaurant);</span>
+
+<span class="nc" id="L96">            return responseEntity;</span>
+        }
+<span class="nc" id="L98">        catch(Exception e)</span>
+        {
+<span class="nc" id="L100">            return new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);</span>
+        }
+    }
+
+    @PostMapping(&quot;charity-profile&quot;)
+    public ResponseEntity&lt;CharityProfile&gt; saveCharity(@RequestBody Charities charity) throws Exception {
+        ResponseEntity responseEntity;
+        try {
+
+<span class="nc" id="L109">            CharityProfile returnCharity = charityService.saveCharity(charity);</span>
+<span class="nc" id="L110">            responseEntity = new ResponseEntity&lt;CharityProfile&gt;(returnCharity, HttpStatus.CREATED);</span>
+
+<span class="nc" id="L112">            rabbitService.sendToCharityRabbitMq(charity);</span>
+
+<span class="nc" id="L114">        } catch (Exception e) {</span>
+
+<span class="nc" id="L116">            responseEntity = new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);</span>
+
+<span class="nc" id="L118">        }</span>
+
+<span class="nc" id="L120">        return responseEntity;</span>
+    }
+//    @GetMapping(&quot;charity-profile&quot;)
+//    public ResponseEntity&lt;List&lt;CharityProfile&gt;&gt; displayCharity()
+//    {
+//        ResponseEntity responseEntity;
+//
+//        try{
+//
+//            responseEntity=new ResponseEntity(charityService.displayCharity(),HttpStatus.CREATED);
+//
+//        }
+//        catch (Exception e){
+//
+//            responseEntity=new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);
+//
+//        }
+//        return responseEntity;
+//    }
+
+    @GetMapping(&quot;charity-profile&quot;)
+    public ResponseEntity&lt;CharityProfile&gt; displayCharityByUsername(@RequestParam String username) throws Exception
+    {
+        ResponseEntity responseEntity;
+
+        try {
+<span class="nc" id="L146">            CharityProfile charity = charityService.displayCharityByUsername(username);</span>
+<span class="nc" id="L147">            return new ResponseEntity&lt;CharityProfile&gt;(charity, HttpStatus.OK);</span>
+<span class="nc" id="L148">        } catch (Exception ex) {</span>
+<span class="nc" id="L149">            responseEntity = new ResponseEntity&lt;String&gt;(ex.getMessage(), HttpStatus.CONFLICT);</span>
+<span class="nc" id="L150">            ex.getMessage();</span>
+        }
+<span class="nc" id="L152">        return responseEntity;</span>
+    }
+
+    @PutMapping(&quot;charity-profile&quot;)
+    public ResponseEntity updateCharity(@RequestBody Charities charity)
+    {
+        try
+        {
+<span class="nc" id="L160">            rabbitService.sendToCharityUpdateRabbitMq(charity);</span>
+<span class="nc" id="L161">            return new ResponseEntity(charityService.updateCharity(charity),HttpStatus.CREATED);</span>
+
+        }
+<span class="nc" id="L164">        catch (Exception e)</span>
+        {
+<span class="nc" id="L166">            return new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);</span>
+        }
+    }
+
+    @PostMapping(&quot;deliveryBoy-profile&quot;)
+    public ResponseEntity&lt;DeliveryBoyProfile&gt; saveDeliveryBoy(@RequestBody DeliveryBoys deliveryBoys) throws Exception {
+        ResponseEntity responseEntity;
+        try {
+<span class="nc" id="L174">            DeliveryBoyProfile returnDeliveryBoy = deliveryBoyService.saveDeliveryBoy(deliveryBoys);</span>
+<span class="nc" id="L175">            responseEntity = new ResponseEntity&lt;DeliveryBoyProfile&gt;(returnDeliveryBoy, HttpStatus.CREATED);</span>
+<span class="nc" id="L176">            rabbitService.sendToDeliveryBoyMQ(deliveryBoys);</span>
+<span class="nc" id="L177">        } catch (Exception e) {</span>
+<span class="nc" id="L178">            responseEntity = new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);</span>
+<span class="nc" id="L179">        }</span>
+
+<span class="nc" id="L181">        return responseEntity;</span>
+    }
+
+    @GetMapping(&quot;deliveryBoy-profile&quot;)
+    public ResponseEntity&lt;DeliveryBoyProfile&gt; displayDeliveryBoy(@RequestParam String username)
+    {
+        ResponseEntity responseEntity;
+
+        try{
+<span class="nc" id="L190">            responseEntity=new ResponseEntity(deliveryBoyService.displayDeliveryBoy(username),HttpStatus.CREATED);</span>
+        }
+<span class="nc" id="L192">        catch (Exception e){</span>
+<span class="nc" id="L193">            responseEntity=new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);</span>
+<span class="nc" id="L194">        }</span>
+<span class="nc" id="L195">        return responseEntity;</span>
+    }
+
+    @PutMapping(&quot;deliveryBoy-profile&quot;)
+    public ResponseEntity updateDeliveryBoy(@RequestBody DeliveryBoys deliveryBoys)
+    {
+        ResponseEntity responseEntity;
+        try{
+<span class="nc" id="L203">            responseEntity=new ResponseEntity(deliveryBoyService.updateDeliveryBoy(deliveryBoys),HttpStatus.CREATED);</span>
+<span class="nc" id="L204">            rabbitService.sendToDeliveryBoyUpdateMQ(deliveryBoys);</span>
+        }
+<span class="nc" id="L206">        catch (Exception e)</span>
+        {
+<span class="nc" id="L208">            responseEntity=new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);</span>
+<span class="nc" id="L209">        }</span>
+<span class="nc" id="L210">        return responseEntity;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

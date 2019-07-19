@@ -1,0 +1,16 @@
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/service/CharityService.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/controller/CharityController.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/domain/Logs.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/config/CharityLogRabbitMQConfig.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/repository/CharitySeedRepository.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/CharityServerApplication.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/domain/Charity.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/rabbitmq/model/CharityStatus.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/domain/CharityLiveStatus.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/repository/CharityRepository.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/service/CharityServiceImpl.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/repository/CharityLiveStatusRepository.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/rabbitmq/model/CharityStatusList.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/service/RabbitService.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/domain/CharitySeed.java
+/home/saranya/Desktop/latest back/ibm-wave5-wastage-reduction/charity-logs-server/src/main/java/com/stackroute/SeedData/CharitySeedData.java
